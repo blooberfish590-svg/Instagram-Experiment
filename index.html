@@ -1,300 +1,449 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Instagram Lookalike - Nature Account</title>
+<title>Profil Nature - Instagram</title>
 <style>
-  body {
-    background: #fafafa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    max-width: 500px;
-    margin: 20px auto;
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+  /* Reset */
+  * {
+    box-sizing: border-box;
   }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: #fafafa;
+    max-width: 600px;
+    margin: 20px auto;
+    color: #262626;
+  }
+
   /* Profile Header */
-  .profile-header {
+  header {
     display: flex;
+    padding: 20px;
     align-items: center;
-    padding: 15px 10px;
     border-bottom: 1px solid #dbdbdb;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
   .avatar {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    background: url('avatar-placeholder.png') center/cover no-repeat;
+    background-size: cover;
+    background-position: center;
     margin-right: 20px;
   }
   .profile-info {
-    flex-grow: 1;
+    flex: 1;
   }
   .username {
     font-weight: 700;
-    font-size: 1.5em;
-    margin-bottom: 5px;
+    font-size: 1.6em;
+    margin-bottom: 4px;
   }
   .bio {
     font-size: 0.9em;
-    color: #555;
+    color: #8e8e8e;
+    margin-bottom: 12px;
+  }
+  .follow-stats {
+    display: flex;
+    gap: 20px;
+  }
+  .follow-stats div {
+    font-weight: 700;
+  }
+  .follow-stats div span {
+    font-weight: 400;
+    color: #8e8e8e;
+    margin-left: 5px;
   }
 
-  /* Posts grid */
-  .posts {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-    gap: 6px;
+  /* Posts Grid */
+  main {
+    padding: 10px 0;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
   }
   .post {
-    width: 32%;
-    cursor: pointer;
-    border-radius: 8px;
-    overflow: hidden;
     position: relative;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    cursor: pointer;
+    overflow: hidden;
+    background: black;
   }
   .post img {
     width: 100%;
+    height: 100%;
     display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .post:hover img {
+    transform: scale(1.1);
   }
 
-  /* Popup Overlay */
-  #popup {
+  /* Popup modal */
+  #modal {
     display: none;
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.65);
+    inset: 0;
+    background: rgba(0,0,0,0.7);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
+    padding: 15px;
   }
-  #popup.active {
+  #modal.active {
     display: flex;
   }
-
-  /* Popup Content */
-  #popup-content {
+  #modal-content {
     background: white;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
-    padding: 20px;
-    position: relative;
-  }
-  #popup-content img {
+    max-width: 500px;
     width: 100%;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
-  .close-btn {
-    position: absolute;
-    right: 15px;
-    top: 10px;
-    font-size: 26px;
+  #modal-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #dbdbdb;
+  }
+  #modal-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin-right: 12px;
+  }
+  #modal-username {
+    font-weight: 700;
+    font-size: 1.1em;
+  }
+  #modal-close {
+    margin-left: auto;
+    font-size: 24px;
     cursor: pointer;
     color: #999;
-    user-select: none;
   }
-  .close-btn:hover {
-    color: black;
-  }
-
-  /* Stats */
-  .stats {
-    font-weight: 600;
-    margin-bottom: 12px;
-    font-size: 1em;
-    color: #444;
+  #modal-close:hover {
+    color: #333;
   }
 
-  /* Buttons */
+  #modal-image {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+  }
+
+  #modal-interactions {
+    padding: 15px;
+  }
+
+  /* Interaction buttons */
   .buttons {
-    margin-bottom: 12px;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
   }
   button {
+    background: none;
     border: none;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-weight: 600;
+    font-size: 1.6em;
     cursor: pointer;
-    margin-right: 10px;
-    font-size: 1em;
+    color: #262626;
+    transition: color 0.3s;
     user-select: none;
-    transition: background-color 0.3s ease;
   }
-  .like-btn {
-    background-color: #ef5350;
-    color: white;
+  button:hover {
+    color: #3897f0;
   }
-  .like-btn.liked {
-    background-color: #b71c1c;
+  button.liked {
+    color: #ed4956;
   }
-  .share-btn {
-    background-color: #42a5f5;
-    color: white;
+  button.shared {
+    color: #42a5f5;
   }
-  .share-btn.shared {
-    background-color: #0d47a1;
+
+  /* Stats text */
+  #stats-text {
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* Comments */
+  #comments-list {
+    max-height: 140px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    border-top: 1px solid #dbdbdb;
+    padding-top: 10px;
+  }
+  .comment {
+    margin-bottom: 8px;
+    font-size: 0.9em;
+  }
+  .comment strong {
+    margin-right: 6px;
   }
 
   /* Comment input */
-  #commentInput {
-    width: 100%;
+  #comment-form {
+    display: flex;
+    gap: 10px;
+  }
+  #comment-input {
+    flex: 1;
     padding: 8px 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 20px;
     font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
   }
-  #submitComment {
-    background-color: #3897f0;
-    color: white;
-    padding: 10px 15px;
-    font-weight: 600;
+  #comment-submit {
+    background: none;
+    border: none;
+    color: #3897f0;
+    font-weight: 700;
     cursor: pointer;
-    border-radius: 6px;
-    width: 100%;
+    font-size: 1em;
+    padding: 0 10px;
   }
-  #submitComment:hover {
-    background-color: #2a6dbb;
+  #comment-submit:disabled {
+    color: #ccc;
+    cursor: default;
+  }
+
+  /* Scrollbar for comments */
+  #comments-list::-webkit-scrollbar {
+    width: 5px;
+  }
+  #comments-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
   }
 </style>
 </head>
 <body>
 
-<!-- Profile header -->
-<div class="profile-header">
-  <div class="avatar" style="background-image:url('iStock-1014791492-1.jpg')"></div>
+<header>
+  <div class="avatar" style="background-image:url('https://randomuser.me/api/portraits/women/68.jpg')"></div>
   <div class="profile-info">
-    <div class="username">@nature_vision</div>
-    <div class="bio">
-      Exploring nature one photo at a time 🌿<br />
-      Sharing beauty from around the world 🌍
+    <div class="username">nature_vision</div>
+    <div class="bio">Explorateur de la nature, partageant la beauté du monde 🌿🌍</div>
+    <div class="follow-stats">
+      <div><strong>1,234</strong><span> abonnés</span></div>
+      <div><strong>180</strong><span> abonnements</span></div>
     </div>
   </div>
-</div>
+</header>
 
-<!-- Posts grid -->
-<div class="posts">
-  <div class="post" onclick="openPopup(0)">
-    <img src="iStock-1014791492-1.jpg" alt="Post 1" />
-  </div>
-  <div class="post" onclick="openPopup(1)">
-    <img src="1444.jpg" alt="Post 2" />
-  </div>
-  <div class="post" onclick="openPopup(2)">
-    <img src="croatie-plivitche-cascade.jpg" alt="Post 3" />
-  </div>
-</div>
-
-<!-- Popup -->
-<div id="popup">
-  <div id="popup-content">
-    <span class="close-btn" onclick="closePopup()">&times;</span>
-    <img id="popup-img" src="" alt="Post Image" />
-    <div class="stats" id="popup-stats"></div>
-    <div class="buttons">
-      <button id="likeBtn" class="like-btn" onclick="likePost()">♡ Like</button>
-      <button id="shareBtn" class="share-btn" onclick="sharePost()">↻ Share</button>
+<main>
+  <div class="posts-grid">
+    <div class="post" onclick="openModal(0)">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Post 1" />
     </div>
-    <input id="commentInput" type="text" placeholder="Add a comment..." />
-    <button id="submitComment" onclick="submitComment()">Post Comment</button>
+    <div class="post" onclick="openModal(1)">
+      <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80" alt="Post 2" />
+    </div>
+    <div class="post" onclick="openModal(2)">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80" alt="Post 3" />
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="modal">
+  <div id="modal-content">
+    <div id="modal-header">
+      <div id="modal-avatar" style="background-image:url('https://randomuser.me/api/portraits/women/68.jpg')"></div>
+      <div id="modal-username">nature_vision</div>
+      <div id="modal-close" onclick="closeModal()">&times;</div>
+    </div>
+    <img id="modal-image" src="" alt="Post agrandi" />
+    <div id="modal-interactions">
+      <div class="buttons">
+        <button id="like-button" title="J’aime" onclick="toggleLike()">♡</button>
+        <button id="share-button" title="Partager" onclick="toggleShare()">↻</button>
+        <button id="comment-button" title="Commenter" onclick="focusComment()">💬</button>
+      </div>
+      <div id="stats-text"></div>
+      <div id="comments-list"></div>
+      <form id="comment-form" onsubmit="submitComment(event)">
+        <input type="text" id="comment-input" placeholder="Ajouter un commentaire..." autocomplete="off" />
+        <button type="submit" id="comment-submit" disabled>Publier</button>
+      </form>
+    </div>
   </div>
 </div>
 
 <script>
-  // Data for posts
+  // Posts data with images, initial counts, and random comments (in French)
   const posts = [
-    { filename: "iStock-1014791492-1.jpg", likes: 20, comments: 5, shares: 3, popularity: "Low" },
-    { filename: "1444.jpg", likes: 500, comments: 120, shares: 80, popularity: "High" },
-    { filename: "croatie-plivitche-cascade.jpg", likes: 600, comments: 200, shares: 150, popularity: "High" }
+    {
+      img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+      likes: 45,
+      shares: 10,
+      commentsCount: 7,
+      comments: [
+        { user: 'marie', text: "Magnifique endroit !" },
+        { user: 'pierre', text: "J’aimerais y aller un jour." },
+        { user: 'anais', text: "La nature à son meilleur." }
+      ],
+      liked: false,
+      shared: false,
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80',
+      likes: 120,
+      shares: 45,
+      commentsCount: 15,
+      comments: [
+        { user: 'luc', text: "Splendide cascade !" },
+        { user: 'sophie', text: "J’adore cette photo." },
+        { user: 'kevin', text: "Ça donne envie de voyager." }
+      ],
+      liked: false,
+      shared: false,
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80',
+      likes: 130,
+      shares: 52,
+      commentsCount: 20,
+      comments: [
+        { user: 'camille', text: "Les couleurs sont incroyables !" },
+        { user: 'nicolas', text: "Un vrai paradis sur terre." },
+        { user: 'emilie', text: "Photos à couper le souffle." }
+      ],
+      liked: false,
+      shared: false,
+    }
   ];
 
-  let currentPostIndex = null;
-  let liked = false;
-  let shared = false;
+  let currentPostIndex = 0;
 
-  function openPopup(index) {
+  const modal = document.getElementById('modal');
+  const modalImage = document.getElementById('modal-image');
+  const statsText = document.getElementById('stats-text');
+  const commentsList = document.getElementById('comments-list');
+  const commentInput = document.getElementById('comment-input');
+  const commentSubmit = document.getElementById('comment-submit');
+  const likeButton = document.getElementById('like-button');
+  const shareButton = document.getElementById('share-button');
+
+  function openModal(index) {
     currentPostIndex = index;
-    liked = false;
-    shared = false;
-
     const post = posts[index];
-    document.getElementById("popup-img").src = post.filename;
+
+    modalImage.src = post.img;
     updateStats();
+    renderComments();
 
-    // Reset buttons and input
-    document.getElementById("likeBtn").classList.remove("liked");
-    document.getElementById("likeBtn").innerText = "♡ Like";
+    // Reset buttons
+    likeButton.classList.toggle('liked', post.liked);
+    likeButton.textContent = post.liked ? '❤️' : '♡';
 
-    document.getElementById("shareBtn").classList.remove("shared");
-    document.getElementById("shareBtn").innerText = "↻ Share";
+    shareButton.classList.toggle('shared', post.shared);
+    shareButton.textContent = post.shared ? '✅' : '↻';
 
-    document.getElementById("commentInput").value = "";
+    commentInput.value = '';
+    commentSubmit.disabled = true;
 
-    document.getElementById("popup").classList.add("active");
+    modal.classList.add('active');
   }
 
-  function closePopup() {
-    document.getElementById("popup").classList.remove("active");
+  function closeModal() {
+    modal.classList.remove('active');
   }
 
   function updateStats() {
     const post = posts[currentPostIndex];
-    document.getElementById("popup-stats").innerText =
-      `Likes: ${post.likes} | Comments: ${post.comments} | Shares: ${post.shares} | Popularity: ${post.popularity}`;
+    statsText.textContent = `${post.likes} J’aime · ${post.commentsCount} commentaires · ${post.shares} partages`;
   }
 
-  function likePost() {
-    if (!liked) {
-      posts[currentPostIndex].likes++;
-      liked = true;
-      document.getElementById("likeBtn").classList.add("liked");
-      document.getElementById("likeBtn").innerText = "❤️ Liked";
+  function renderComments() {
+    const post = posts[currentPostIndex];
+    commentsList.innerHTML = '';
+
+    post.comments.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'comment';
+      div.innerHTML = `<strong>${c.user}</strong> ${c.text}`;
+      commentsList.appendChild(div);
+    });
+  }
+
+  function toggleLike() {
+    const post = posts[currentPostIndex];
+    if (!post.liked) {
+      post.likes++;
+      post.liked = true;
     } else {
-      posts[currentPostIndex].likes--;
-      liked = false;
-      document.getElementById("likeBtn").classList.remove("liked");
-      document.getElementById("likeBtn").innerText = "♡ Like";
+      post.likes--;
+      post.liked = false;
     }
+    likeButton.classList.toggle('liked', post.liked);
+    likeButton.textContent = post.liked ? '❤️' : '♡';
     updateStats();
   }
 
-  function sharePost() {
-    if (!shared) {
-      posts[currentPostIndex].shares++;
-      shared = true;
-      document.getElementById("shareBtn").classList.add("shared");
-      document.getElementById("shareBtn").innerText = "✅ Shared";
-      alert("Thanks for sharing!");
+  function toggleShare() {
+    const post = posts[currentPostIndex];
+    if (!post.shared) {
+      post.shares++;
+      post.shared = true;
+      alert("Merci de partager !");
     } else {
-      posts[currentPostIndex].shares--;
-      shared = false;
-      document.getElementById("shareBtn").classList.remove("shared");
-      document.getElementById("shareBtn").innerText = "↻ Share";
+      post.shares--;
+      post.shared = false;
     }
+    shareButton.classList.toggle('shared', post.shared);
+    shareButton.textContent = post.shared ? '✅' : '↻';
     updateStats();
   }
 
-  function submitComment() {
-    const commentInput = document.getElementById("commentInput");
-    const comment = commentInput.value.trim();
-    if(comment.length > 0){
-      posts[currentPostIndex].comments++;
-      alert(`Your comment: "${comment}" has been posted!`);
-      commentInput.value = "";
-      updateStats();
-    } else {
-      alert("Please type a comment before posting.");
-    }
+  function focusComment() {
+    commentInput.focus();
   }
+
+  commentInput.addEventListener('input', () => {
+    commentSubmit.disabled = commentInput.value.trim().length === 0;
+  });
+
+  function submitComment(e) {
+    e.preventDefault();
+    const post = posts[currentPostIndex];
+    const text = commentInput.value.trim();
+    if (text.length === 0) return;
+
+    // Add comment with a default username (could randomize)
+    const newComment = { user: "utilisateur", text };
+    post.comments.push(newComment);
+    post.commentsCount++;
+    commentInput.value = '';
+    commentSubmit.disabled = true;
+    renderComments();
+    updateStats();
+  }
+
+  // Close modal on outside click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
 </script>
 
 </body>
 </html>
 
-iStock-1014791492-1.jpg
-1444.jpg
-croatie-plivitche-cascade.jpg
