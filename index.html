@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Instagram Experiment</title>
+</head>
+<body>
+
+<h1>Instagram Post Experiment</h1>
+
+<p>Choose your interaction and popularity level:</p>
+
+<div>
+  <label for="action">Action:</label>
+  <select id="action">
+    <option value="Like">Like</option>
+    <option value="Comment">Comment</option>
+    <option value="Share">Share</option>
+  </select>
+</div>
+
+<div>
+  <label for="popularity">Popularity:</label>
+  <select id="popularity">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+</div>
+
+<button id="submitBtn">Submit</button>
+
+<script>
+  // Your Google Form base URL (replace with your actual form)
+  const formBaseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/viewform?usp=pp_url';
+
+  // The Google Form entry IDs for each question
+  const entryIds = {
+    Like: 'entry.101173465',
+    Comment: 'entry.1696572370',
+    Share: 'entry.1329892506',
+    PopularityLow: 'entry.861841110',
+    PopularityHigh: 'entry.71574771'
+  };
+
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    const action = document.getElementById('action').value;
+    const popularity = document.getElementById('popularity').value;
+
+    // Map popularity to entry ID and value
+    let popularityEntryId;
+    let popularityValue = popularity;
+
+    if(popularity === 'Low') {
+      popularityEntryId = entryIds.PopularityLow;
+    } else if(popularity === 'Medium') {
+      popularityEntryId = entryIds.PopularityMedium;
+    } else {
+      popularityEntryId = entryIds.PopularityHigh;
+    }
+
+    // Build URL with pre-filled data
+    // Google Forms expects key=value pairs for entry IDs
+    // But action is in different entry IDs depending on what action is selected
+    // So we only fill the selected action’s entry ID, and leave others blank
+
+    let url = formBaseUrl + '&';
+
+    // Append the action entry (only the selected one)
+    url += `${entryIds[action]}=${encodeURIComponent(action)}&`;
+
+    // Append the popularity entry
+    url += `${popularityEntryId}=${encodeURIComponent(popularityValue)}`;
+
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
