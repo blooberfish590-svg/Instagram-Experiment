@@ -279,13 +279,8 @@
 </div>
 
 <script>
-  // Your Google Form URL and input IDs
-  const googleFormBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/formResponse";
-  const googleFormParams = {
-    like: "entry.101173465",
-    comment: "entry.1696572370",
-    share: "entry.538794930"
-  };
+  // Your Google Apps Script URL
+  const scriptURL = "https://script.google.com/macros/s/AKfycbyis3Kj3mkMmqyzV7MVc3LjW9_uDN2qlqr1ZCKOk19Coahlr8Xmor-lpXnYeYf4w7cC/exec";
 
   // Profile info
   const profile = {
@@ -312,174 +307,209 @@
       id: 2,
       image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80",
       likes: 15000,
-      shares: 290,
-      comments: [
-        {user: "lucie.b", text: "Wow, ça donne envie de partir!"},
-        {user: "mathieu44", text: "Le ciel est incroyable."}
-      ],
+      shares: 150,
+      comments: [],
     },
     {
       id: 3,
-      image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80",
-      likes: 12000,
-      shares: 200,
+      image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
+      likes: 500,
+      shares: 5,
       comments: [
-        {user: "marie_p", text: "Tellement paisible..."},
-        {user: "antoine", text: "Superbe photo!"}
+        {user: "leo", text: "Wow, c’est paisible."}
       ],
     },
     {
       id: 4,
-      image: "https://images.unsplash.com/photo-1506459225024-1428097a7e18?auto=format&fit=crop&w=600&q=80",
-      likes: 19000,
-      shares: 350,
+      image: "https://images.unsplash.com/photo-1435224654926-ecc9f7fa028c?auto=format&fit=crop&w=600&q=80",
+      likes: 22000,
+      shares: 400,
       comments: [
-        {user: "camille_t", text: "J’adore les montagnes."},
-        {user: "nico_72", text: "Quel paysage impressionnant!"}
+        {user: "marie", text: "J’aimerais y être!"}
       ],
     },
     {
       id: 5,
-      image: "https://images.unsplash.com/photo-1469474968032-c0c4e1e7146a?auto=format&fit=crop&w=600&q=80",
-      likes: 21000,
-      shares: 400,
-      comments: [
-        {user: "emilie", text: "Tellement relaxant."},
-        {user: "paul_b", text: "Envie d’y être maintenant!"}
-      ],
-    },
-    // Low interaction posts:
-    {
-      id: 6,
-      image: "https://images.unsplash.com/photo-1500534314209-a25d5f91a7a3?auto=format&fit=crop&w=600&q=80",
-      likes: 10,
-      shares: 1,
+      image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80",
+      likes: 200,
+      shares: 2,
       comments: [],
     },
     {
+      id: 6,
+      image: "https://images.unsplash.com/photo-1441829266145-b2b8d145a0bb?auto=format&fit=crop&w=600&q=80",
+      likes: 8000,
+      shares: 100,
+      comments: [
+        {user: "paul", text: "Superbe photo!"}
+      ],
+    },
+    {
       id: 7,
-      image: "https://images.unsplash.com/photo-1501183638714-8f01f2d37d9a?auto=format&fit=crop&w=600&q=80",
-      likes: 7,
+      image: "https://images.unsplash.com/photo-1465311443275-6bcb60308f2f?auto=format&fit=crop&w=600&q=80",
+      likes: 100,
       shares: 0,
       comments: [],
     },
     {
       id: 8,
-      image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80",
-      likes: 15,
-      shares: 2,
-      comments: [],
+      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+      likes: 17000,
+      shares: 290,
+      comments: [
+        {user: "lisa", text: "Tellement reposant."},
+        {user: "nicolas", text: "J’y vais ce weekend!"}
+      ],
     },
     {
       id: 9,
-      image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=600&q=80",
-      likes: 8,
-      shares: 0,
+      image: "https://images.unsplash.com/photo-1486308510493-cb4473a1b22a?auto=format&fit=crop&w=600&q=80",
+      likes: 50,
+      shares: 1,
       comments: [],
     },
-    // 10th post exists but will NOT be shown:
-    {
-      id: 10,
-      image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80",
-      likes: 50,
-      shares: 4,
-      comments: [{user:"userX", text:"Très belle photo!"}],
-    }
   ];
 
-  // We'll only show first 9 posts in grid
-  const visiblePosts = posts.slice(0, 9);
+  // Shuffle posts mixing high and low interactions
+  function shufflePosts(arr) {
+    const high = arr.filter(p => p.likes > 1000);
+    const low = arr.filter(p => p.likes <= 1000);
+    const mixed = [];
+    const maxLen = Math.max(high.length, low.length);
+    for (let i = 0; i < maxLen; i++) {
+      if(i < high.length) mixed.push(high[i]);
+      if(i < low.length) mixed.push(low[i]);
+    }
+    return mixed;
+  }
 
+  const mixedPosts = shufflePosts(posts);
+
+  // Render posts grid
   const postsGrid = document.getElementById("posts-grid");
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modal-image");
-  const modalUsername = document.getElementById("modal-username");
-  const modalAvatar = document.getElementById("modal-avatar");
-  const modalClose = document.getElementById("modal-close");
 
-  const likeBtn = document.getElementById("like-button");
-  const shareBtn = document.getElementById("share-button");
-  const commentBtn = document.getElementById("comment-button");
-  const statsText = document.getElementById("stats-text");
-  const commentsList = document.getElementById("comments-list");
-  const commentForm = document.getElementById("comment-form");
-  const commentInput = document.getElementById("comment-input");
-  const commentSubmit = document.getElementById("comment-submit");
-
-  let currentPost = null;
-  let liked = false;
-  let shared = false;
-
-  // Build grid posts
-  visiblePosts.forEach(post => {
-    const div = document.createElement("div");
-    div.className = "post";
-    div.setAttribute("tabindex", "0");
-    div.setAttribute("aria-label", `Ouvrir le post numéro ${post.id}`);
-    div.innerHTML = `<img src="${post.image}" alt="Photo paysage ${post.id}" loading="lazy" />`;
-    div.addEventListener("click", () => openModal(post));
-    div.addEventListener("keydown", e => {
+  mixedPosts.forEach(post => {
+    const postDiv = document.createElement("div");
+    postDiv.className = "post";
+    postDiv.tabIndex = 0;
+    postDiv.setAttribute("role", "button");
+    postDiv.setAttribute("aria-label", `Afficher le post ${post.id}`);
+    const img = document.createElement("img");
+    img.src = post.image;
+    img.alt = `Photo paysage post numéro ${post.id}`;
+    postDiv.appendChild(img);
+    postDiv.addEventListener("click", () => openModal(post));
+    postDiv.addEventListener("keypress", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         openModal(post);
         e.preventDefault();
       }
     });
-    postsGrid.appendChild(div);
+    postsGrid.appendChild(postDiv);
   });
+
+  // Modal elements
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modal-image");
+  const modalUsername = document.getElementById("modal-username");
+  const modalAvatar = document.getElementById("modal-avatar");
+  const statsText = document.getElementById("stats-text");
+  const commentsList = document.getElementById("comments-list");
+  const commentInput = document.getElementById("comment-input");
+  const commentSubmit = document.getElementById("comment-submit");
+  const likeButton = document.getElementById("like-button");
+  const shareButton = document.getElementById("share-button");
+  const commentButton = document.getElementById("comment-button");
+  let currentPost = null;
 
   function openModal(post) {
     currentPost = post;
-    liked = false;
-    shared = false;
-
     modalImage.src = post.image;
     modalImage.alt = `Photo du post numéro ${post.id}`;
     modalUsername.textContent = profile.username;
-    modalAvatar.style.backgroundImage = `url('${profile.avatarUrl}')`;
-
-    likeBtn.classList.remove("liked");
-    shareBtn.classList.remove("shared");
-    likeBtn.setAttribute("aria-pressed", "false");
-    shareBtn.setAttribute("aria-pressed", "false");
-
-    updateStatsText();
+    modalAvatar.style.backgroundImage = `url(${profile.avatarUrl})`;
+    updateStats();
     renderComments();
-
+    resetButtons();
+    modal.classList.add("active");
     commentInput.value = "";
     commentSubmit.disabled = true;
-
-    modal.classList.add("active");
-    commentInput.blur();
+    commentInput.focus();
+    document.body.style.overflow = "hidden"; // prevent background scroll
   }
 
   function closeModal() {
     modal.classList.remove("active");
-    currentPost = null;
+    document.body.style.overflow = "";
   }
 
-  modalClose.addEventListener("click", closeModal);
-  modal.addEventListener("click", e => {
-    if (e.target === modal) closeModal();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && modal.classList.contains("active")) closeModal();
-  });
+  function updateStats() {
+    const totalLikes = currentPost.likes;
+    const totalShares = currentPost.shares;
+    const totalComments = currentPost.comments.length;
+    statsText.textContent = `${totalLikes} j’aime · ${totalShares} partages · ${totalComments} commentaires`;
+  }
+
+  function renderComments() {
+    commentsList.innerHTML = "";
+    currentPost.comments.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "comment";
+      div.innerHTML = `<strong>${c.user}</strong>${escapeHTML(c.text)}`;
+      commentsList.appendChild(div);
+    });
+  }
+
+  // Escape HTML to prevent injection
+  function escapeHTML(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Buttons states
+  let liked = false;
+  let shared = false;
+
+  function resetButtons() {
+    liked = false;
+    shared = false;
+    likeButton.classList.remove("liked");
+    likeButton.setAttribute("aria-pressed", "false");
+    shareButton.classList.remove("shared");
+    shareButton.setAttribute("aria-pressed", "false");
+  }
 
   function toggleLike() {
-    if (!currentPost) return;
     liked = !liked;
-    likeBtn.classList.toggle("liked", liked);
-    likeBtn.setAttribute("aria-pressed", liked.toString());
-    sendInteraction("like", liked);
+    if (liked) {
+      likeButton.classList.add("liked");
+      likeButton.setAttribute("aria-pressed", "true");
+      currentPost.likes++;
+      sendInteraction(currentPost.id, "like", true);
+    } else {
+      likeButton.classList.remove("liked");
+      likeButton.setAttribute("aria-pressed", "false");
+      currentPost.likes--;
+      sendInteraction(currentPost.id, "like", false);
+    }
+    updateStats();
   }
 
   function toggleShare() {
-    if (!currentPost) return;
     shared = !shared;
-    shareBtn.classList.toggle("shared", shared);
-    shareBtn.setAttribute("aria-pressed", shared.toString());
-    sendInteraction("share", shared);
-    if (shared) alert("Merci d'avoir partagé !");
+    if (shared) {
+      shareButton.classList.add("shared");
+      shareButton.setAttribute("aria-pressed", "true");
+      currentPost.shares++;
+      sendInteraction(currentPost.id, "share", true);
+    } else {
+      shareButton.classList.remove("shared");
+      shareButton.setAttribute("aria-pressed", "false");
+      currentPost.shares--;
+      sendInteraction(currentPost.id, "share", false);
+    }
+    updateStats();
   }
 
   function focusComment() {
@@ -490,86 +520,50 @@
     commentSubmit.disabled = commentInput.value.trim() === "";
   });
 
-  function submitComment(e) {
-    e.preventDefault();
-    if (!currentPost) return;
-    const text = commentInput.value.trim();
-    if (!text) return;
-
-    // Add comment to post data (simulate)
-    currentPost.comments.push({user: profile.username, text});
+  function submitComment(event) {
+    event.preventDefault();
+    const commentText = commentInput.value.trim();
+    if (!commentText) return;
+    currentPost.comments.push({user: profile.username, text: commentText});
+    sendInteraction(currentPost.id, "comment", commentText);
     renderComments();
+    updateStats();
     commentInput.value = "";
     commentSubmit.disabled = true;
-
-    // Send comment to Google Form
-    sendInteraction("comment", text);
   }
 
-  function renderComments() {
-    commentsList.innerHTML = "";
-    if (currentPost.comments.length === 0) {
-      commentsList.textContent = "Aucun commentaire.";
-      return;
-    }
-    currentPost.comments.forEach(c => {
-      const div = document.createElement("div");
-      div.className = "comment";
-      div.innerHTML = `<strong>${c.user}</strong>${escapeHtml(c.text)}`;
-      commentsList.appendChild(div);
-    });
-  }
-
-  function updateStatsText() {
-    if (!currentPost) {
-      statsText.textContent = "";
-      return;
-    }
-    const likeCount = currentPost.likes + (liked ? 1 : 0);
-    const shareCount = currentPost.shares + (shared ? 1 : 0);
-    const commentCount = currentPost.comments.length;
-
-    statsText.textContent = `${likeCount.toLocaleString()} j’aime — ${shareCount.toLocaleString()} partages — ${commentCount.toLocaleString()} commentaires`;
-  }
-
-  // Helper to send interaction data to Google Form
-  function sendInteraction(type, value) {
-    if (!currentPost) return;
-    const formData = new FormData();
-    // Each interaction sends post ID + interaction content
-    const idField = "entry.1234567890"; // Dummy post id field, change if real
-    formData.append(idField, currentPost.id);
-    switch (type) {
-      case "like":
-        formData.append(googleFormParams.like, value ? "1" : "0");
-        break;
-      case "share":
-        formData.append(googleFormParams.share, value ? "1" : "0");
-        break;
-      case "comment":
-        formData.append(googleFormParams.comment, value);
-        break;
-    }
-    // Send as POST via fetch
-    fetch(googleFormBaseURL, {
+  // Send interaction data to Google Apps Script
+  function sendInteraction(postId, action, value) {
+    const data = {
+      postId: postId,
+      action: action,
+      value: value,
+      username: profile.username,
+      timestamp: new Date().toISOString()
+    };
+    fetch(scriptURL, {
       method: "POST",
-      mode: "no-cors",
-      body: formData
-    }).catch(e => console.log("Erreur en envoyant au formulaire Google:", e));
-  }
-
-  // Simple HTML escape for comments display
-  function escapeHtml(text) {
-    return text.replace(/[&<>"']/g, function(m) {
-      return ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[m];
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    }).then(response => {
+      if (!response.ok) {
+        console.error("Erreur lors de l’envoi des données :", response.statusText);
+      }
+      return response.json();
+    }).then(result => {
+      console.log("Interaction envoyée avec succès :", result);
+    }).catch(error => {
+      console.error("Erreur réseau lors de l’envoi :", error);
     });
   }
+
+  // Accessibility: close modal on ESC key
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("active")) {
+      closeModal();
+    }
+  });
+
 </script>
 
 </body>
