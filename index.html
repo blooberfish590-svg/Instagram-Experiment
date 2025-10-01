@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>paysages_sum - Profil Nature</title>
+<title>vues_naturelles - Profil Nature</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
@@ -233,8 +233,8 @@
 <header>
   <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80')"></div>
   <div class="profile-info">
-    <div class="username">paysages_sum</div>
-    <div class="bio">Amoureux de la nature, partageant les plus beaux paysages du monde 🌄🌿</div>
+    <div class="username">vues_naturelles</div>
+    <div class="bio">Partage des plus beaux paysages du monde 🌄🌿</div>
     <div class="follow-stats">
       <div><strong>24,567</strong><span> abonnés</span></div>
       <div><strong>482</strong><span> abonnements</span></div>
@@ -251,7 +251,7 @@
   <div id="modal-content">
     <div id="modal-header">
       <div id="modal-avatar" style="background-image:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80')"></div>
-      <div id="modal-username">paysages_sum</div>
+      <div id="modal-username">vues_naturelles</div>
       <div id="modal-close" onclick="closeModal()" aria-label="Fermer la fenêtre modale">&times;</div>
     </div>
     <img id="modal-image" src="" alt="Photo du post agrandie" />
@@ -262,9 +262,16 @@
         <button id="comment-button" title="Commenter" onclick="focusComment()">💬</button>
       </div>
       <div id="stats-text"></div>
-      <div id="comments-list"></div>
+      <div id="comments-list" aria-live="polite"></div>
       <form id="comment-form" onsubmit="submitComment(event)" aria-label="Formulaire de commentaire">
-        <input type="text" id="comment-input" placeholder="Ajouter un commentaire..." autocomplete="off" aria-required="true" />
+        <input
+          type="text"
+          id="comment-input"
+          placeholder="Ajouter un commentaire..."
+          aria-label="Ajouter un commentaire"
+          autocomplete="off"
+          required
+        />
         <button type="submit" id="comment-submit" disabled>Publier</button>
       </form>
     </div>
@@ -272,331 +279,297 @@
 </div>
 
 <script>
-  // Google Form URL and entry IDs (update as needed)
-  const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/formResponse";
+  // Your Google Form URL and input IDs
+  const googleFormBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/formResponse";
+  const googleFormParams = {
+    like: "entry.101173465",
+    comment: "entry.1696572370",
+    share: "entry.538794930"
+  };
 
-  // Entry IDs for Like, Comment, Share and Post ID
-  const ENTRY_LIKE = "entry.101173465";
-  const ENTRY_COMMENT = "entry.1696572370";
-  const ENTRY_SHARE = "entry.538794930";
-  const ENTRY_POST = "entry.1329892506";
+  // Profile info
+  const profile = {
+    username: "vues_naturelles",
+    avatarUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80",
+    bio: "Partage des plus beaux paysages du monde 🌄🌿",
+    followers: 24567,
+    following: 482,
+  };
 
-  // Sample posts data - 10 posts with URLs, captions, preset likes/shares/comments counts
+  // Posts data (9 visible posts, 5 high interaction, 4 low interaction)
   const posts = [
     {
-      id: 'post1',
-      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-      caption: 'Lever de soleil magique sur la montagne',
-      likes: 15500,
-      shares: 1800,
+      id: 1,
+      image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=600&q=80",
+      likes: 18000,
+      shares: 320,
       comments: [
-        "Incroyable !",
-        "Je veux y aller !"
+        {user: "julie_fr", text: "Magnifique vue!"},
+        {user: "alexandre", text: "J’adore cet endroit."}
       ],
     },
     {
-      id: 'post2',
-      image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80',
-      caption: 'La forêt en automne',
+      id: 2,
+      image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80",
+      likes: 15000,
+      shares: 290,
+      comments: [
+        {user: "lucie.b", text: "Wow, ça donne envie de partir!"},
+        {user: "mathieu44", text: "Le ciel est incroyable."}
+      ],
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80",
       likes: 12000,
-      shares: 950,
+      shares: 200,
       comments: [
-        "Les couleurs sont splendides.",
-        "On se croirait dans un rêve."
+        {user: "marie_p", text: "Tellement paisible..."},
+        {user: "antoine", text: "Superbe photo!"}
       ],
     },
     {
-      id: 'post3',
-      image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80',
-      caption: 'Rivière tranquille au lever du jour',
-      likes: 18200,
-      shares: 2300,
+      id: 4,
+      image: "https://images.unsplash.com/photo-1506459225024-1428097a7e18?auto=format&fit=crop&w=600&q=80",
+      likes: 19000,
+      shares: 350,
       comments: [
-        "Tellement paisible.",
-        "J’adore cet endroit."
+        {user: "camille_t", text: "J’adore les montagnes."},
+        {user: "nico_72", text: "Quel paysage impressionnant!"}
       ],
     },
     {
-      id: 'post4',
-      image: 'https://images.unsplash.com/photo-1465311443471-237194a8a8c1?auto=format&fit=crop&w=600&q=80',
-      caption: 'Montagnes enneigées au coucher du soleil',
-      likes: 19800,
-      shares: 3000,
+      id: 5,
+      image: "https://images.unsplash.com/photo-1469474968032-c0c4e1e7146a?auto=format&fit=crop&w=600&q=80",
+      likes: 21000,
+      shares: 400,
       comments: [
-        "La nature à son apogée.",
-        "Wow, c’est magnifique."
+        {user: "emilie", text: "Tellement relaxant."},
+        {user: "paul_b", text: "Envie d’y être maintenant!"}
       ],
     },
+    // Low interaction posts:
     {
-      id: 'post5',
-      image: 'https://images.unsplash.com/photo-1445820135101-1b748ab50a58?auto=format&fit=crop&w=600&q=80',
-      caption: 'Chemin dans la forêt verdoyante',
-      likes: 16000,
-      shares: 1400,
-      comments: [
-        "J’adore cette promenade.",
-        "Respirer cet air pur..."
-      ],
-    },
-    // Low interaction posts
-    {
-      id: 'post6',
-      image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80',
-      caption: 'Petite cascade secrète',
-      likes: 12,
-      shares: 2,
-      comments: [],
-    },
-    {
-      id: 'post7',
-      image: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=600&q=80',
-      caption: 'Rochers au bord de la mer',
-      likes: 9,
-      shares: 0,
-      comments: [],
-    },
-    {
-      id: 'post8',
-      image: 'https://images.unsplash.com/photo-1468071174046-657d9d351a40?auto=format&fit=crop&w=600&q=80',
-      caption: 'Lever de lune au-dessus des collines',
-      likes: 14,
-      shares: 3,
-      comments: [],
-    },
-    {
-      id: 'post9',
-      image: 'https://images.unsplash.com/photo-1444078066767-55b0d5a4d70b?auto=format&fit=crop&w=600&q=80',
-      caption: 'Prairie tranquille au matin',
-      likes: 8,
+      id: 6,
+      image: "https://images.unsplash.com/photo-1500534314209-a25d5f91a7a3?auto=format&fit=crop&w=600&q=80",
+      likes: 10,
       shares: 1,
       comments: [],
     },
     {
-      id: 'post10',
-      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80',
-      caption: 'Sentier de montagne sous un ciel bleu',
-      likes: 15,
-      shares: 4,
+      id: 7,
+      image: "https://images.unsplash.com/photo-1501183638714-8f01f2d37d9a?auto=format&fit=crop&w=600&q=80",
+      likes: 7,
+      shares: 0,
       comments: [],
     },
+    {
+      id: 8,
+      image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80",
+      likes: 15,
+      shares: 2,
+      comments: [],
+    },
+    {
+      id: 9,
+      image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=600&q=80",
+      likes: 8,
+      shares: 0,
+      comments: [],
+    },
+    // 10th post exists but will NOT be shown:
+    {
+      id: 10,
+      image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80",
+      likes: 50,
+      shares: 4,
+      comments: [{user:"userX", text:"Très belle photo!"}],
+    }
   ];
 
-  const postsGrid = document.getElementById('posts-grid');
+  // We'll only show first 9 posts in grid
+  const visiblePosts = posts.slice(0, 9);
 
-  // Render posts grid
-  function renderPostsGrid() {
-    postsGrid.innerHTML = '';
-    posts.forEach((post, i) => {
-      const div = document.createElement('div');
-      div.classList.add('post');
-      div.setAttribute('tabindex', 0);
-      div.setAttribute('aria-label', `Post ${i + 1}: ${post.caption}. Appuyez pour ouvrir.`);
-      div.style.backgroundImage = `url('${post.image}')`;
-      div.innerHTML = `<img src="${post.image}" alt="Photo: ${post.caption}">`;
-      div.addEventListener('click', () => openModal(post.id));
-      div.addEventListener('keypress', e => {
-        if (e.key === 'Enter') openModal(post.id);
-      });
-      postsGrid.appendChild(div);
-    });
-  }
+  const postsGrid = document.getElementById("posts-grid");
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modal-image");
+  const modalUsername = document.getElementById("modal-username");
+  const modalAvatar = document.getElementById("modal-avatar");
+  const modalClose = document.getElementById("modal-close");
 
-  // Modal elements
-  const modal = document.getElementById('modal');
-  const modalImage = document.getElementById('modal-image');
-  const modalUsername = document.getElementById('modal-username');
-  const modalAvatar = document.getElementById('modal-avatar');
-  const modalClose = document.getElementById('modal-close');
-  const likeButton = document.getElementById('like-button');
-  const shareButton = document.getElementById('share-button');
-  const commentButton = document.getElementById('comment-button');
-  const statsText = document.getElementById('stats-text');
-  const commentsList = document.getElementById('comments-list');
-  const commentForm = document.getElementById('comment-form');
-  const commentInput = document.getElementById('comment-input');
-  const commentSubmit = document.getElementById('comment-submit');
+  const likeBtn = document.getElementById("like-button");
+  const shareBtn = document.getElementById("share-button");
+  const commentBtn = document.getElementById("comment-button");
+  const statsText = document.getElementById("stats-text");
+  const commentsList = document.getElementById("comments-list");
+  const commentForm = document.getElementById("comment-form");
+  const commentInput = document.getElementById("comment-input");
+  const commentSubmit = document.getElementById("comment-submit");
 
   let currentPost = null;
+  let liked = false;
+  let shared = false;
 
-  // State of interactions per post (to update UI)
-  const interactionState = {};
-
-  // Initialize state
-  posts.forEach(post => {
-    interactionState[post.id] = {
-      liked: false,
-      shared: false,
-      likes: post.likes,
-      shares: post.shares,
-      comments: [...post.comments],
-    };
+  // Build grid posts
+  visiblePosts.forEach(post => {
+    const div = document.createElement("div");
+    div.className = "post";
+    div.setAttribute("tabindex", "0");
+    div.setAttribute("aria-label", `Ouvrir le post numéro ${post.id}`);
+    div.innerHTML = `<img src="${post.image}" alt="Photo paysage ${post.id}" loading="lazy" />`;
+    div.addEventListener("click", () => openModal(post));
+    div.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        openModal(post);
+        e.preventDefault();
+      }
+    });
+    postsGrid.appendChild(div);
   });
 
-  // Open modal for a post
-  function openModal(postId) {
-    currentPost = posts.find(p => p.id === postId);
-    if (!currentPost) return;
+  function openModal(post) {
+    currentPost = post;
+    liked = false;
+    shared = false;
 
-    modalImage.src = currentPost.image;
-    modalImage.alt = `Photo agrandie: ${currentPost.caption}`;
-    modalUsername.textContent = 'paysages_sum';
-    modalAvatar.style.backgroundImage = `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80')`;
+    modalImage.src = post.image;
+    modalImage.alt = `Photo du post numéro ${post.id}`;
+    modalUsername.textContent = profile.username;
+    modalAvatar.style.backgroundImage = `url('${profile.avatarUrl}')`;
 
-    updateModalUI();
+    likeBtn.classList.remove("liked");
+    shareBtn.classList.remove("shared");
+    likeBtn.setAttribute("aria-pressed", "false");
+    shareBtn.setAttribute("aria-pressed", "false");
 
-    modal.classList.add('active');
+    updateStatsText();
+    renderComments();
 
-    commentInput.value = '';
+    commentInput.value = "";
     commentSubmit.disabled = true;
+
+    modal.classList.add("active");
+    commentInput.blur();
   }
 
-  // Close modal
   function closeModal() {
-    modal.classList.remove('active');
+    modal.classList.remove("active");
     currentPost = null;
   }
 
-  modalClose.addEventListener('click', closeModal);
+  modalClose.addEventListener("click", closeModal);
+  modal.addEventListener("click", e => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && modal.classList.contains("active")) closeModal();
+  });
 
-  // Update modal buttons & stats & comments
-  function updateModalUI() {
-    if (!currentPost) return;
-    const state = interactionState[currentPost.id];
-
-    likeButton.classList.toggle('liked', state.liked);
-    likeButton.setAttribute('aria-pressed', state.liked ? "true" : "false");
-    shareButton.classList.toggle('shared', state.shared);
-    shareButton.setAttribute('aria-pressed', state.shared ? "true" : "false");
-
-    statsText.textContent = `${state.likes} J’aime · ${state.shares} partages · ${state.comments.length} commentaires`;
-
-    // Render comments
-    commentsList.innerHTML = '';
-    if (state.comments.length === 0) {
-      commentsList.innerHTML = '<em>Aucun commentaire</em>';
-    } else {
-      state.comments.forEach(cmt => {
-        const cmtDiv = document.createElement('div');
-        cmtDiv.className = 'comment';
-        cmtDiv.innerHTML = `<strong>paysages_sum:</strong> ${cmt}`;
-        commentsList.appendChild(cmtDiv);
-      });
-    }
-  }
-
-  // Toggle Like
   function toggleLike() {
     if (!currentPost) return;
-    const state = interactionState[currentPost.id];
-
-    if (state.liked) {
-      state.liked = false;
-      state.likes--;
-      sendInteractionToGoogleForm(currentPost.id, 'Like', 'none');
-    } else {
-      state.liked = true;
-      state.likes++;
-      sendInteractionToGoogleForm(currentPost.id, 'Like', 'liked');
-    }
-    updateModalUI();
+    liked = !liked;
+    likeBtn.classList.toggle("liked", liked);
+    likeBtn.setAttribute("aria-pressed", liked.toString());
+    sendInteraction("like", liked);
   }
 
-  // Toggle Share
   function toggleShare() {
     if (!currentPost) return;
-    const state = interactionState[currentPost.id];
-
-    if (state.shared) {
-      state.shared = false;
-      state.shares--;
-      sendInteractionToGoogleForm(currentPost.id, 'Share', 'none');
-    } else {
-      state.shared = true;
-      state.shares++;
-      sendInteractionToGoogleForm(currentPost.id, 'Share', 'shared');
-      alert('Merci de partager ce post ! (Simulation)');
-    }
-    updateModalUI();
+    shared = !shared;
+    shareBtn.classList.toggle("shared", shared);
+    shareBtn.setAttribute("aria-pressed", shared.toString());
+    sendInteraction("share", shared);
+    if (shared) alert("Merci d'avoir partagé !");
   }
 
-  // Focus comment input on comment button click
   function focusComment() {
     commentInput.focus();
   }
 
-  // Enable/disable comment submit button based on input
-  commentInput.addEventListener('input', () => {
-    commentSubmit.disabled = commentInput.value.trim() === '';
+  commentInput.addEventListener("input", () => {
+    commentSubmit.disabled = commentInput.value.trim() === "";
   });
 
-  // Submit comment form
-  function submitComment(event) {
-    event.preventDefault();
+  function submitComment(e) {
+    e.preventDefault();
     if (!currentPost) return;
+    const text = commentInput.value.trim();
+    if (!text) return;
 
-    const comment = commentInput.value.trim();
-    if (comment === '') return;
-
-    const state = interactionState[currentPost.id];
-    state.comments.push(comment);
-    sendInteractionToGoogleForm(currentPost.id, 'Comment', comment);
-
-    commentInput.value = '';
+    // Add comment to post data (simulate)
+    currentPost.comments.push({user: profile.username, text});
+    renderComments();
+    commentInput.value = "";
     commentSubmit.disabled = true;
-    updateModalUI();
 
-    // Scroll comments to bottom
-    commentsList.scrollTop = commentsList.scrollHeight;
+    // Send comment to Google Form
+    sendInteraction("comment", text);
   }
 
-  // Send interaction data to Google Form (POST)
-  function sendInteractionToGoogleForm(postId, interactionType, commentText = '') {
-    let formData = new URLSearchParams();
-
-    formData.append(ENTRY_POST, postId);
-
-    if (interactionType === 'Like') {
-      formData.append(ENTRY_LIKE, commentText === 'liked' ? 'Like' : '.');
-      formData.append(ENTRY_COMMENT, '.');
-      formData.append(ENTRY_SHARE, '.');
-    } else if (interactionType === 'Share') {
-      formData.append(ENTRY_SHARE, commentText === 'shared' ? 'Share' : '.');
-      formData.append(ENTRY_COMMENT, '.');
-      formData.append(ENTRY_LIKE, '.');
-    } else if (interactionType === 'Comment') {
-      formData.append(ENTRY_COMMENT, commentText);
-      formData.append(ENTRY_LIKE, '.');
-      formData.append(ENTRY_SHARE, '.');
-    } else {
-      // fallback no interaction
-      formData.append(ENTRY_LIKE, '.');
-      formData.append(ENTRY_COMMENT, '.');
-      formData.append(ENTRY_SHARE, '.');
+  function renderComments() {
+    commentsList.innerHTML = "";
+    if (currentPost.comments.length === 0) {
+      commentsList.textContent = "Aucun commentaire.";
+      return;
     }
-
-    // Send fetch POST request - no CORS issues on Google Forms endpoint
-    fetch(GOOGLE_FORM_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: formData.toString()
-    }).catch(err => {
-      // Silently ignore fetch errors because no-cors mode hides them
-      // console.log('Google Form submit error:', err);
+    currentPost.comments.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "comment";
+      div.innerHTML = `<strong>${c.user}</strong>${escapeHtml(c.text)}`;
+      commentsList.appendChild(div);
     });
   }
 
-  renderPostsGrid();
-
-  // Accessibility: close modal on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
+  function updateStatsText() {
+    if (!currentPost) {
+      statsText.textContent = "";
+      return;
     }
-  });
+    const likeCount = currentPost.likes + (liked ? 1 : 0);
+    const shareCount = currentPost.shares + (shared ? 1 : 0);
+    const commentCount = currentPost.comments.length;
 
+    statsText.textContent = `${likeCount.toLocaleString()} j’aime — ${shareCount.toLocaleString()} partages — ${commentCount.toLocaleString()} commentaires`;
+  }
+
+  // Helper to send interaction data to Google Form
+  function sendInteraction(type, value) {
+    if (!currentPost) return;
+    const formData = new FormData();
+    // Each interaction sends post ID + interaction content
+    const idField = "entry.1234567890"; // Dummy post id field, change if real
+    formData.append(idField, currentPost.id);
+    switch (type) {
+      case "like":
+        formData.append(googleFormParams.like, value ? "1" : "0");
+        break;
+      case "share":
+        formData.append(googleFormParams.share, value ? "1" : "0");
+        break;
+      case "comment":
+        formData.append(googleFormParams.comment, value);
+        break;
+    }
+    // Send as POST via fetch
+    fetch(googleFormBaseURL, {
+      method: "POST",
+      mode: "no-cors",
+      body: formData
+    }).catch(e => console.log("Erreur en envoyant au formulaire Google:", e));
+  }
+
+  // Simple HTML escape for comments display
+  function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, function(m) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m];
+    });
+  }
 </script>
 
 </body>
