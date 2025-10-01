@@ -1,82 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Instagram Experiment</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nature Vision - Instagram Simulation</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="profile">
+    <div class="header">
+      <div class="avatar"></div>
+      <div class="bio">
+        <h2>@nature_vision</h2>
+        <p>Exploring nature one photo at a time 🌿<br>Sharing beauty from around the world 🌍</p>
+      </div>
+    </div>
 
-<h1>Instagram Post Experiment</h1>
+    <div class="posts">
+      <div class="post" onclick="openPopup(1)">
+        <img src="images/iStock-1014791492-1.jpg" alt="Post 1" />
+      </div>
+      <div class="post" onclick="openPopup(2)">
+        <img src="images/1444.jpg" alt="Post 2" />
+      </div>
+      <div class="post" onclick="openPopup(3)">
+        <img src="images/croatie-plivitche-cascade.jpg" alt="Post 3" />
+      </div>
+    </div>
+  </div>
 
-<p>Choose your interaction and popularity level:</p>
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <span class="close-btn" onclick="closePopup()">&times;</span>
+      <img id="popup-img" src="" alt="Post" />
+      <div class="stats" id="popup-stats"></div>
+      <div class="buttons">
+        <button onclick="likePost()">❤️ Like</button>
+        <button onclick="sharePost()">🔁 Share</button>
+      </div>
+      <input type="text" id="commentInput" class="comment-input" placeholder="Leave a comment..." />
+      <button onclick="submitForm()">Submit</button>
+    </div>
+  </div>
 
-<div>
-  <label for="action">Action:</label>
-  <select id="action">
-    <option value="Like">Like</option>
-    <option value="Comment">Comment</option>
-    <option value="Share">Share</option>
-  </select>
-</div>
-
-<div>
-  <label for="popularity">Popularity:</label>
-  <select id="popularity">
-    <option value="Low">Low</option>
-    <option value="Medium">Medium</option>
-    <option value="High">High</option>
-  </select>
-</div>
-
-<button id="submitBtn">Submit</button>
-
-<script>
-  // Your Google Form base URL (replace with your actual form)
-  const formBaseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/viewform?usp=pp_url';
-
-  // The Google Form entry IDs for each question
-  const entryIds = {
-    Like: 'entry.101173465',
-    Comment: 'entry.1696572370',
-    Share: 'entry.1329892506',
-    PopularityLow: 'entry.861841110',
-    PopularityHigh: 'entry.71574771'
-  };
-
-  document.getElementById('submitBtn').addEventListener('click', () => {
-    const action = document.getElementById('action').value;
-    const popularity = document.getElementById('popularity').value;
-
-    // Map popularity to entry ID and value
-    let popularityEntryId;
-    let popularityValue = popularity;
-
-    if(popularity === 'Low') {
-      popularityEntryId = entryIds.PopularityLow;
-    } else if(popularity === 'Medium') {
-      popularityEntryId = entryIds.PopularityMedium;
-    } else {
-      popularityEntryId = entryIds.PopularityHigh;
-    }
-
-    // Build URL with pre-filled data
-    // Google Forms expects key=value pairs for entry IDs
-    // But action is in different entry IDs depending on what action is selected
-    // So we only fill the selected action’s entry ID, and leave others blank
-
-    let url = formBaseUrl + '&';
-
-    // Append the action entry (only the selected one)
-    url += `${entryIds[action]}=${encodeURIComponent(action)}&`;
-
-    // Append the popularity entry
-    url += `${popularityEntryId}=${encodeURIComponent(popularityValue)}`;
-
-    // Open the URL in a new tab
-    window.open(url, '_blank');
-  });
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
