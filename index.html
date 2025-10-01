@@ -2,47 +2,283 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nature Vision - Instagram Simulation</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Basic styling to make it look Instagram-ish */
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: auto;
+      background: #fafafa;
+      padding: 20px;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #bbb;
+      margin-right: 15px;
+    }
+    .username {
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+    .bio {
+      color: #555;
+    }
+    .posts {
+      display: flex;
+      justify-content: space-between;
+    }
+    .post {
+      width: 30%;
+      cursor: pointer;
+      position: relative;
+    }
+    .post img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    /* Popup Styles */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #popup.active {
+      display: flex;
+    }
+    #popup-content {
+      background: white;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      position: relative;
+    }
+    #popup-content img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .stats {
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .buttons button {
+      margin-right: 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .like-btn {
+      background: #ed4956;
+      color: white;
+    }
+    .share-btn {
+      background: #3897f0;
+      color: white;
+    }
+    #commentInput {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    #submitComment {
+      padding: 8px 15px;
+      background: #3897f0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="profile">
-    <div class="header">
-      <div class="avatar"></div>
-      <div class="bio">
-        <h2>@nature_vision</h2>
-        <p>Exploring nature one photo at a time 🌿<br>Sharing beauty from around the world 🌍</p>
-      </div>
-    </div>
 
-    <div class="posts">
-      <div class="post" onclick="openPopup(1)">
-        <img src="images/iStock-1014791492-1.jpg" alt="Post 1" />
-      </div>
-      <div class="post" onclick="openPopup(2)">
-        <img src="images/1444.jpg" alt="Post 2" />
-      </div>
-      <div class="post" onclick="openPopup(3)">
-        <img src="images/croatie-plivitche-cascade.jpg" alt="Post 3" />
-      </div>
+  <div class="profile-header">
+    <div class="avatar"></div>
+    <div>
+      <div class="username">@nature_vision</div>
+      <div class="bio">Exploring nature one photo at a time 🌿<br />Sharing beauty from around the world 🌍</div>
     </div>
   </div>
 
-  <div class="popup" id="popup">
-    <div class="popup-content">
+  <div class="posts">
+    <div class="post" onclick="openPopup(0)">
+      <img src="iStock-1014791492-1.jpg" alt="Post 1" />
+    </div>
+    <div class="post" onclick="openPopup(1)">
+      <img src="1444.jpg" alt="Post 2" />
+    </div>
+    <div class="post" onclick="openPopup(2)">
+      <img src="croatie-plivitche-cascade.jpg" alt="Post 3" />
+    </div>
+  </div>
+
+  <!-- Popup for individual post -->
+  <div id="popup">
+    <div id="popup-content">
       <span class="close-btn" onclick="closePopup()">&times;</span>
-      <img id="popup-img" src="" alt="Post" />
+      <img id="popup-img" src="" alt="Post Image" />
       <div class="stats" id="popup-stats"></div>
       <div class="buttons">
-        <button onclick="likePost()">❤️ Like</button>
-        <button onclick="sharePost()">🔁 Share</button>
+        <button class="like-btn" onclick="likePost()">❤️ Like</button>
+        <button class="share-btn" onclick="sharePost()">🔁 Share</button>
       </div>
-      <input type="text" id="commentInput" class="comment-input" placeholder="Leave a comment..." />
-      <button onclick="submitForm()">Submit</button>
+      <input type="text" id="commentInput" placeholder="Leave a comment..." />
+      <button id="submitComment" onclick="submitComment()">Submit</button>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Data for posts (likes, comments, shares counts and popularity)
+    const posts = [
+      {
+        filename: "iStock-1014791492-1.jpg",
+        likes: 50,
+        comments: 10,
+        shares: 5,
+        popularity: "Low"
+      },
+      {
+        filename: "1444.jpg",
+        likes: 500,
+        comments: 120,
+        shares: 80,
+        popularity: "High"
+      },
+      {
+        filename: "croatie-plivitche-cascade.jpg",
+        likes: 600,
+        comments: 200,
+        shares: 150,
+        popularity: "High"
+      }
+    ];
+
+    let currentPostIndex = null;
+    let liked = false;
+    let shared = false;
+
+    function openPopup(index) {
+      currentPostIndex = index;
+      liked = false;
+      shared = false;
+      const post = posts[index];
+      document.getElementById("popup-img").src = post.filename;
+      document.getElementById("popup-stats").innerText = 
+        `Likes: ${post.likes} | Comments: ${post.comments} | Shares: ${post.shares} | Popularity: ${post.popularity}`;
+      document.getElementById("commentInput").value = "";
+      document.getElementById("popup").classList.add("active");
+    }
+
+    function closePopup() {
+      document.getElementById("popup").classList.remove("active");
+    }
+
+    function likePost() {
+      if (!liked) {
+        posts[currentPostIndex].likes++;
+        liked = true;
+        updateStats();
+        alert("You liked this post!");
+      } else {
+        alert("You already liked this post.");
+      }
+    }
+
+    function sharePost() {
+      if (!shared) {
+        posts[currentPostIndex].shares++;
+        shared = true;
+        updateStats();
+        alert("You shared this post!");
+      } else {
+        alert("You already shared this post.");
+      }
+    }
+
+    function updateStats() {
+      const post = posts[currentPostIndex];
+      document.getElementById("popup-stats").innerText = 
+        `Likes: ${post.likes} | Comments: ${post.comments} | Shares: ${post.shares} | Popularity: ${post.popularity}`;
+    }
+
+    function submitComment() {
+      const comment = document.getElementById("commentInput").value.trim();
+      if (comment === "") {
+        alert("Please enter a comment before submitting.");
+        return;
+      }
+
+      // Increment comments count locally
+      posts[currentPostIndex].comments++;
+      updateStats();
+
+      // Build Google Form URL with pre-filled answers
+      const baseFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/viewform?usp=pp_url";
+
+      // Use the entry IDs you shared (update these if needed)
+      // entries: like, comment text, share, popularity (Low/High)
+      const likeEntryID = "entry.101173465";
+      const commentEntryID = "entry.1696572370";
+      const shareEntryID = "entry.1329892506";
+      const popularityLowID = "entry.861841110";
+      const popularityHighID = "entry.71574771";
+
+      // Determine Like value (Yes/No)
+      const likeValue = liked ? "Like" : "No Like";
+      // Comment value = the comment text
+      const commentValue = comment;
+      // Determine Share value (Yes/No)
+      const shareValue = shared ? "Share" : "No Share";
+      // Popularity value
+      const popularityValue = posts[currentPostIndex].popularity === "High" ? "High" : "Low";
+
+      // Construct URL with pre-filled query parameters
+      const url = `${baseFormURL}&${likeEntryID}=${encodeURIComponent(likeValue)}&${commentEntryID}=${encodeURIComponent(commentValue)}&${shareEntryID}=${encodeURIComponent(shareValue)}`;
+
+      // Add popularity field (only one can be selected, so pick right entry)
+      if (popularityValue === "High") {
+        url += `&${popularityHighID}=High`;
+      } else {
+        url += `&${popularityLowID}=Low`;
+      }
+
+      // Open Google Form in new tab
+      window.open(url, "_blank");
+
+      // Clear comment input and close popup
+      document.getElementById("commentInput").value = "";
+      closePopup();
+    }
+  </script>
 </body>
 </html>
+
+/InstagramProject/
+   index.html
+   iStock-1014791492-1.jpg
+   1444.jpg
+   croatie-plivitche-cascade.jpg
