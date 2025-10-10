@@ -1,107 +1,81 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Instagram Post Mock — Anonymous 123</title>
+  <title>Publication Instagram — Anonyme 123</title>
   <style>
-    /* Simple reset */
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#fafafa;color:#262626}
-
-    /* Container to simulate a phone frame */
     .phone{width:360px;margin:28px auto;padding:12px;border:1px solid #dbdbdb;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-
-    /* Header */
     .post-header{display:flex;align-items:center;gap:12px;padding:12px}
     .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
     .user{font-weight:600}
     .header-right{margin-left:auto}
-
-    /* Image */
     .post-image{width:100%;height:360px;background:#eee;display:block;object-fit:cover}
-
-    /* Actions row */
     .actions{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
     .left-actions{display:flex;gap:12px;align-items:center}
     .icon{width:26px;height:26px;display:inline-block}
     .likes{font-weight:600;padding:0 12px}
-
-    /* Caption + comments */
     .caption{padding:0 12px 8px}
     .caption .name{font-weight:600;margin-right:6px}
     .view-comments{color:#8e8e8e;padding:8px 12px;cursor:pointer}
     .comment{padding:2px 12px}
     .comment .commenter{font-weight:600;margin-right:6px}
     .timestamp{padding:8px 12px;color:#8e8e8e;font-size:12px;text-transform:uppercase}
-
-    /* Add comment bar */
     .add-comment{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #efefef}
     .emoji{font-size:20px}
     .comment-input{flex:1;border:0;outline:0}
     .post-btn{background:none;border:0;color:#0095f6;font-weight:600;cursor:pointer}
-
-    /* Small helper */
     .muted{color:#8e8e8e}
-
-    /* Make it resemble Instagram proportions on larger screens */
     @media(min-width:600px){.phone{width:410px}}
-
   </style>
 </head>
 <body>
-  <div class="phone" role="region" aria-label="Instagram post mock">
+  <div class="phone" role="region" aria-label="Publication Instagram">
     <header class="post-header">
       <div class="avatar">A</div>
-      <div class="user">Anonymous 123</div>
+      <div class="user">Anonyme 123</div>
       <div class="header-right">•••</div>
     </header>
 
-    <!-- The image the user requested to include -->
-    <!-- NOTE: this uses the URL you supplied. If it doesn't load due to hotlinking or access restrictions, save the image locally and replace the src with a local path. -->
-    <img class="post-image" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Ffr%2Fphotos%2Fmont-fuji&psig=AOvVaw0aFSP7jOD2Ypq_q16RXJLe&ust=1760177482182000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIjD0Z-ymZADFQAAAAAdAAAAABAE" alt="Post image — Mount Fuji"/>
+    <img class="post-image" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Ffr%2Fphotos%2Fmont-fuji&psig=AOvVaw0aFSP7jOD2Ypq_q16RXJLe&ust=1760177482182000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIjD0Z-ymZADFQAAAAAdAAAAABAE" alt="Image de la publication — Mont Fuji"/>
 
     <div class="actions">
       <div class="left-actions">
-        <!-- Like (heart) SVG -->
         <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M34.3 6c-3.4 0-6.5 1.7-8.3 4.3C24.2 7.7 21.1 6 17.7 6 11 6 6 11 6 17.7 6 29.4 24 40 24 40s18-10.6 18-22.3C42 11 37 6 34.3 6z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <!-- Comment -->
         <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M47 36l-4 12-12-4H9c-3.3 0-6-2.7-6-6V9c0-3.3 2.7-6 6-6h30c3.3 0 6 2.7 6 6v27z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <!-- Share -->
         <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 44l40-20L4 4v13l30 7-30 7z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <!-- Save icon on right -->
       <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M40 6H12c-2.2 0-4 1.8-4 4v30l20-8 20 8V10c0-2.2-1.8-4-4-4z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
 
-    <div class="likes">6,458 likes</div>
+    <div class="likes">6 458 mentions J’aime</div>
 
     <div class="caption">
-      <span class="name">Anonymous 123</span>
-      <span>Sunrise over Mount Fuji. Crisp air, perfect reflection — dream morning.</span>
+      <span class="name">Anonyme 123</span>
+      <span>Lever du soleil sur le mont Fuji. Air frais, reflet parfait — matin de rêve.</span>
     </div>
 
-    <div class="view-comments">View all 88 comments</div>
+    <div class="view-comments">Voir les 88 commentaires</div>
 
-    <!-- A few visible comments (mix of positive & mild negative) -->
-    <div class="comment"><span class="commenter">travelwithmei</span><span>Amazing composition — the reflection is unreal 😍</span></div>
-    <div class="comment"><span class="commenter">photo.geek</span><span>Beautiful light. What camera did you use?</span></div>
-    <div class="comment"><span class="commenter">mountaintruth</span><span>Looks a little too edited — feels less natural to me.</span></div>
-    <div class="comment"><span class="commenter">sakura_days</span><span>Made my day. I want to be there ✨</span></div>
-    <div class="comment"><span class="commenter">no_filter_nick</span><span>Not impressed — feels staged and over-processed.</span></div>
+    <div class="comment"><span class="commenter">voyageavecmoi</span><span>Composition incroyable — le reflet est irréel 😍</span></div>
+    <div class="comment"><span class="commenter">photo.geek</span><span>Lumière magnifique. Quel appareil photo as-tu utilisé ?</span></div>
+    <div class="comment"><span class="commenter">veritemontagne</span><span>Ça semble un peu trop retouché — pas très naturel à mon goût.</span></div>
+    <div class="comment"><span class="commenter">joursdesakura</span><span>Ça a illuminé ma journée. J’aimerais y être ✨</span></div>
+    <div class="comment"><span class="commenter">sansfiltrenick</span><span>Pas impressionné — on dirait une mise en scène trop travaillée.</span></div>
 
-    <div class="timestamp">2 HOURS AGO</div>
+    <div class="timestamp">IL Y A 2 HEURES</div>
 
     <div class="add-comment">
       <div class="emoji">😊</div>
-      <input class="comment-input" placeholder="Add a comment..." aria-label="Add a comment" />
-      <button class="post-btn">Post</button>
+      <input class="comment-input" placeholder="Ajoutez un commentaire..." aria-label="Ajouter un commentaire" />
+      <button class="post-btn">Publier</button>
     </div>
   </div>
 
-  <!-- Small accessibility + usage note -->
   <div style="max-width:720px;margin:12px auto;padding:10px;color:#6b6b6b;font-size:13px;text-align:center;">
-    This is a static HTML/CSS mock that imitates an Instagram post interface. To use the exact image: download it and replace the <code>src</code> attribute if the remote URL does not load.
+    Ceci est une maquette HTML/CSS statique imitant une publication Instagram. Pour utiliser l’image exacte : téléchargez-la et remplacez l’attribut <code>src</code> si l’URL distante ne se charge pas.
   </div>
 </body>
 </html>
