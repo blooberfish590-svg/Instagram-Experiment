@@ -1,579 +1,107 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>vues_naturelles - Profil Nature</title>
+  <title>Instagram Post Mock — Anonymous 123</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: #fafafa;
-      max-width: 600px;
-      margin: 20px auto;
-      color: #262626;
-    }
-    header {
-      display: flex;
-      padding: 20px;
-      align-items: center;
-      border-bottom: 1px solid #dbdbdb;
-      background: white;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      margin-right: 20px;
-      border: 2px solid #3897f0;
-    }
-    .profile-info { flex: 1; }
-    .username {
-      font-weight: 700;
-      font-size: 1.6em;
-      margin-bottom: 4px;
-    }
-    .bio {
-      font-size: 0.9em;
-      color: #8e8e8e;
-      margin-bottom: 12px;
-    }
-    .follow-stats {
-      display: flex;
-      gap: 20px;
-    }
-    .follow-stats div {
-      font-weight: 700;
-    }
-    .follow-stats div span {
-      font-weight: 400;
-      color: #8e8e8e;
-      margin-left: 5px;
-    }
-    main {
-      padding: 10px 0;
-    }
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-    .post {
-      position: relative;
-      cursor: pointer;
-      overflow: hidden;
-      background: black;
-      aspect-ratio: 1 / 1;
-    }
-    .post img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-    .post:hover img,
-    .post:focus img {
-      transform: scale(1.1);
-    }
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      padding: 15px;
-    }
-    #modal.active {
-      display: flex;
-    }
-    #modal-content {
-      background: white;
-      max-width: 500px;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    #modal-header {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #dbdbdb;
-    }
-    #modal-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      margin-right: 12px;
-      border: 2px solid #3897f0;
-    }
-    #modal-username {
-      font-weight: 700;
-      font-size: 1.1em;
-    }
-    #modal-close {
-      margin-left: auto;
-      font-size: 28px;
-      cursor: pointer;
-      color: #999;
-    }
-    #modal-close:hover {
-      color: #333;
-    }
-    #modal-image {
-      width: 100%;
-      max-height: 350px;
-      object-fit: cover;
-    }
-    #modal-interactions {
-      padding: 15px;
-    }
-    .buttons {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 10px;
-    }
-    button {
-      background: none;
-      border: none;
-      font-size: 1.8em;
-      cursor: pointer;
-      color: #262626;
-      transition: color 0.3s;
-      user-select: none;
-    }
-    button:hover {
-      color: #3897f0;
-    }
-    button.liked {
-      color: #ed4956;
-    }
-    button.shared {
-      color: #42a5f5;
-    }
-    #stats-text {
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    #comments-list {
-      max-height: 140px;
-      overflow-y: auto;
-      margin-bottom: 12px;
-      border-top: 1px solid #dbdbdb;
-      padding-top: 10px;
-    }
-    .comment {
-      margin-bottom: 8px;
-      font-size: 0.9em;
-    }
-    .comment strong {
-      margin-right: 6px;
-    }
-    #comment-form {
-      display: flex;
-      gap: 10px;
-    }
-    #comment-input {
-      flex: 1;
-      padding: 8px 10px;
-      border: 1px solid #dbdbdb;
-      border-radius: 20px;
-      font-size: 1em;
-    }
-    #comment-submit {
-      background: none;
-      border: none;
-      color: #3897f0;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 1em;
-      padding: 0 10px;
-    }
-    #comment-submit:disabled {
-      color: #ccc;
-      cursor: default;
-    }
-    #comments-list::-webkit-scrollbar {
-      width: 5px;
-    }
-    #comments-list::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 10px;
-    }
+    /* Simple reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#fafafa;color:#262626}
+
+    /* Container to simulate a phone frame */
+    .phone{width:360px;margin:28px auto;padding:12px;border:1px solid #dbdbdb;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+
+    /* Header */
+    .post-header{display:flex;align-items:center;gap:12px;padding:12px}
+    .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .user{font-weight:600}
+    .header-right{margin-left:auto}
+
+    /* Image */
+    .post-image{width:100%;height:360px;background:#eee;display:block;object-fit:cover}
+
+    /* Actions row */
+    .actions{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+    .left-actions{display:flex;gap:12px;align-items:center}
+    .icon{width:26px;height:26px;display:inline-block}
+    .likes{font-weight:600;padding:0 12px}
+
+    /* Caption + comments */
+    .caption{padding:0 12px 8px}
+    .caption .name{font-weight:600;margin-right:6px}
+    .view-comments{color:#8e8e8e;padding:8px 12px;cursor:pointer}
+    .comment{padding:2px 12px}
+    .comment .commenter{font-weight:600;margin-right:6px}
+    .timestamp{padding:8px 12px;color:#8e8e8e;font-size:12px;text-transform:uppercase}
+
+    /* Add comment bar */
+    .add-comment{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #efefef}
+    .emoji{font-size:20px}
+    .comment-input{flex:1;border:0;outline:0}
+    .post-btn{background:none;border:0;color:#0095f6;font-weight:600;cursor:pointer}
+
+    /* Small helper */
+    .muted{color:#8e8e8e}
+
+    /* Make it resemble Instagram proportions on larger screens */
+    @media(min-width:600px){.phone{width:410px}}
+
   </style>
 </head>
 <body>
+  <div class="phone" role="region" aria-label="Instagram post mock">
+    <header class="post-header">
+      <div class="avatar">A</div>
+      <div class="user">Anonymous 123</div>
+      <div class="header-right">•••</div>
+    </header>
 
-<header>
-  <div class="avatar" style="background-image:
-    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80')"></div>
-  <div class="profile-info">
-    <div class="username">vues_naturelles</div>
-    <div class="bio">Partage des plus beaux paysages du monde 🌄🌿</div>
-    <div class="follow-stats">
-      <div><strong>24,567</strong><span> abonnés</span></div>
-      <div><strong>482</strong><span> abonnements</span></div>
-    </div>
-  </div>
-</header>
+    <!-- The image the user requested to include -->
+    <!-- NOTE: this uses the URL you supplied. If it doesn't load due to hotlinking or access restrictions, save the image locally and replace the src with a local path. -->
+    <img class="post-image" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Ffr%2Fphotos%2Fmont-fuji&psig=AOvVaw0aFSP7jOD2Ypq_q16RXJLe&ust=1760177482182000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIjD0Z-ymZADFQAAAAAdAAAAABAE" alt="Post image — Mount Fuji"/>
 
-<main>
-  <div class="posts-grid" id="posts-grid" aria-live="polite" aria-label="Galerie de photos"></div>
-</main>
-
-<!-- Modal -->
-<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-username">
-  <div id="modal-content">
-    <div id="modal-header">
-      <div id="modal-avatar" style="background-image:
-        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80')"></div>
-      <div id="modal-username">vues_naturelles</div>
-      <div id="modal-close" onclick="closeModal()" aria-label="Fermer"
-           tabindex="0" role="button">&times;</div>
-    </div>
-    <img id="modal-image" src="" alt="Photo du post agrandie" />
-    <div id="modal-interactions">
-      <div class="buttons">
-        <button id="like-button" title="J’aime" aria-pressed="false"
-                onclick="toggleLike()" aria-label="Bouton j’aime">♡</button>
-        <button id="share-button" title="Partager" aria-pressed="false"
-                onclick="toggleShare()" aria-label="Bouton partager">↻</button>
-        <button id="comment-button" title="Commenter"
-                onclick="focusComment()" aria-label="Bouton commenter">💬</button>
+    <div class="actions">
+      <div class="left-actions">
+        <!-- Like (heart) SVG -->
+        <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M34.3 6c-3.4 0-6.5 1.7-8.3 4.3C24.2 7.7 21.1 6 17.7 6 11 6 6 11 6 17.7 6 29.4 24 40 24 40s18-10.6 18-22.3C42 11 37 6 34.3 6z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <!-- Comment -->
+        <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M47 36l-4 12-12-4H9c-3.3 0-6-2.7-6-6V9c0-3.3 2.7-6 6-6h30c3.3 0 6 2.7 6 6v27z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <!-- Share -->
+        <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 44l40-20L4 4v13l30 7-30 7z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <div id="stats-text" aria-live="polite"></div>
-      <div id="comments-list" aria-live="polite"></div>
-      <form id="comment-form" onsubmit="submitComment(event)"
-            aria-label="Formulaire de commentaire">
-        <input
-          type="text"
-          id="comment-input"
-          placeholder="Ajouter un commentaire..."
-          aria-label="Ajouter un commentaire"
-          autocomplete="off"
-          required
-        />
-        <button type="submit" id="comment-submit" disabled>Publier</button>
-      </form>
+      <!-- Save icon on right -->
+      <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M40 6H12c-2.2 0-4 1.8-4 4v30l20-8 20 8V10c0-2.2-1.8-4-4-4z" fill="none" stroke="#262626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="likes">6,458 likes</div>
+
+    <div class="caption">
+      <span class="name">Anonymous 123</span>
+      <span>Sunrise over Mount Fuji. Crisp air, perfect reflection — dream morning.</span>
+    </div>
+
+    <div class="view-comments">View all 88 comments</div>
+
+    <!-- A few visible comments (mix of positive & mild negative) -->
+    <div class="comment"><span class="commenter">travelwithmei</span><span>Amazing composition — the reflection is unreal 😍</span></div>
+    <div class="comment"><span class="commenter">photo.geek</span><span>Beautiful light. What camera did you use?</span></div>
+    <div class="comment"><span class="commenter">mountaintruth</span><span>Looks a little too edited — feels less natural to me.</span></div>
+    <div class="comment"><span class="commenter">sakura_days</span><span>Made my day. I want to be there ✨</span></div>
+    <div class="comment"><span class="commenter">no_filter_nick</span><span>Not impressed — feels staged and over-processed.</span></div>
+
+    <div class="timestamp">2 HOURS AGO</div>
+
+    <div class="add-comment">
+      <div class="emoji">😊</div>
+      <input class="comment-input" placeholder="Add a comment..." aria-label="Add a comment" />
+      <button class="post-btn">Post</button>
     </div>
   </div>
-</div>
 
-<script>
-  // Your Google Form submit URL (formResponse endpoint)
-  const googleFormBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLSffRo_iBkQpoZs4tBHE8XsbQjCDoqQDUphDQMfcxfHSqJxS6A/formResponse';
-
-  // Map your entry IDs (likes and comments) per post
-  const googleFormEntryIDs = {
-    1: { like: 'entry.101173465', comment: 'entry.2047071178' },
-    2: { like: 'entry.2104023893', comment: 'entry.1287388776' },
-    3: { like: 'entry.744453841',  comment: 'entry.1080020578' },
-    4: { like: 'entry.2145982999', comment: 'entry.200964838' },
-    5: { like: 'entry.90484567',   comment: 'entry.2000027487' },
-    6: { like: 'entry.750466602',  comment: 'entry.1558323089' },
-    7: { like: 'entry.1856103927', comment: 'entry.1614154253' },
-    8: { like: 'entry.157235196',  comment: 'entry.189285210' },
-    9: { like: 'entry.1813427459', comment: 'entry.217981815' },
-    10:{ like: 'entry.909669417',  comment: 'entry.1548024541' }
-  };
-
-  // Posts data: 5 high-engagement, 5 low-engagement
-  const posts = [
-    // High engagement
-    {
-      postId: 1,
-      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-      likes: 1200,
-      comments: [
-        { user: 'Alice', text: 'Magnifique !' },
-        { user: 'Bob', text: 'J’adore cet endroit.' },
-        { user: 'Chloé', text: 'Tellement paisible.' },
-        { user: 'David', text: 'Je rêve d’y aller.' },
-        { user: 'Eva', text: 'Les couleurs sont incroyables.' }
-      ],
-      shares: 50
-    },
-    {
-      postId: 2,
-      image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80',
-      likes: 980,
-      comments: [
-        { user: 'Fiona', text: 'Wow, incroyable!' },
-        { user: 'George', text: 'La beauté naturelle.' },
-        { user: 'Hugo', text: 'Tellement serein.' }
-      ],
-      shares: 30
-    },
-    {
-      postId: 3,
-      image: 'https://images.unsplash.com/photo-1468071174046-657d9d351a40?auto=format&fit=crop&w=800&q=80',
-      likes: 750,
-      comments: [
-        { user: 'Jules', text: 'Cette lumière est parfaite.' },
-        { user: 'Klara', text: 'J’aime la tranquillité ici.' }
-      ],
-      shares: 20
-    },
-    {
-      postId: 4,
-      image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80',
-      likes: 1300,
-      comments: [
-        { user: 'Léa', text: 'C’est superbe!' },
-        { user: 'Marc', text: 'La nature est magique.' }
-      ],
-      shares: 45
-    },
-    {
-      postId: 5,
-      image: 'https://images.unsplash.com/photo-1445820133077-ec956e595e9b?auto=format&fit=crop&w=800&q=80',
-      likes: 640,
-      comments: [
-        { user: 'Olivier', text: 'Magnifique panorama.' },
-        { user: 'Pauline', text: 'Tellement calme ici.' }
-      ],
-      shares: 15
-    },
-    // Low engagement
-    {
-      postId: 6,
-      image: 'https://images.unsplash.com/photo-1442406964439-e46ab8eff7c4?auto=format&fit=crop&w=800&q=80',
-      likes: 8,
-      comments: [],
-      shares: 0
-    },
-    {
-      postId: 7,
-      image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
-      likes: 5,
-      comments: [],
-      shares: 0
-    },
-    {
-      postId: 8,
-      image: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=800&q=80',
-      likes: 10,
-      comments: [],
-      shares: 0
-    },
-    {
-      postId: 9,
-      image: 'https://images.unsplash.com/photo-1500534314209-a25be79f67ae?auto=format&fit=crop&w=800&q=80',
-      likes: 7,
-      comments: [],
-      shares: 0
-    },
-    {
-      postId: 10,
-      image: 'https://images.unsplash.com/photo-1465311443246-53f25002f8ca?auto=format&fit=crop&w=800&q=80',
-      likes: 6,
-      comments: [],
-      shares: 0
-    }
-  ];
-
-  // Shuffle utility
-  function shuffle(array) {
-    let current = array.length, t, i;
-    while (current !== 0) {
-      i = Math.floor(Math.random() * current);
-      current--;
-      t = array[current];
-      array[current] = array[i];
-      array[i] = t;
-    }
-    return array;
-  }
-
-  const postsGrid = document.getElementById('posts-grid');
-  const modal = document.getElementById('modal');
-  const modalImage = document.getElementById('modal-image');
-  const likeButton = document.getElementById('like-button');
-  const shareButton = document.getElementById('share-button');
-  const commentsList = document.getElementById('comments-list');
-  const commentForm = document.getElementById('comment-form');
-  const commentInput = document.getElementById('comment-input');
-  const commentSubmit = document.getElementById('comment-submit');
-  let currentPost = null;
-  let liked = false;
-  let shared = false;
-  let modalLikes = 0, modalShares = 0, modalComments = [];
-
-  function renderPosts() {
-    postsGrid.innerHTML = '';
-    shuffle(posts);
-    posts.forEach(post => {
-      const div = document.createElement('div');
-      div.className = 'post';
-      div.setAttribute('tabindex', 0);
-      div.setAttribute('role', 'button');
-      div.setAttribute('aria-label', `Photo paysage numéro ${post.postId}`);
-      div.dataset.postId = post.postId;
-      const img = document.createElement('img');
-      img.src = post.image;
-      img.alt = `Paysage ${post.postId}`;
-      div.appendChild(img);
-      div.onclick = () => openModal(post);
-      div.onkeypress = e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          openModal(post);
-          e.preventDefault();
-        }
-      };
-      postsGrid.appendChild(div);
-    });
-  }
-
-  function openModal(post) {
-    currentPost = post;
-    liked = false;
-    shared = false;
-    modalLikes = post.likes;
-    modalShares = post.shares || 0;
-    modalComments = post.comments.slice();
-
-    modalImage.src = post.image;
-    updateStatsText();
-    renderComments();
-    updateLikeButton(false);
-    updateShareButton(false);
-    commentInput.value = '';
-    commentSubmit.disabled = true;
-
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    currentPost = null;
-  }
-
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
-    }
-  });
-
-  function updateStatsText() {
-    const text = `${modalLikes} j’aime${modalLikes > 1 ? 's' : ''} • ${modalShares} partage${modalShares > 1 ? 's' : ''} • ${modalComments.length} commentaire${modalComments.length > 1 ? 's' : ''}`;
-    document.getElementById('stats-text').textContent = text;
-  }
-
-  function updateLikeButton(isLiked) {
-    likeButton.textContent = isLiked ? '♥' : '♡';
-    likeButton.classList.toggle('liked', isLiked);
-    likeButton.setAttribute('aria-pressed', isLiked.toString());
-  }
-  function updateShareButton(isShared) {
-    shareButton.classList.toggle('shared', isShared);
-    shareButton.setAttribute('aria-pressed', isShared.toString());
-  }
-
-  function toggleLike() {
-    if (!currentPost) return;
-    liked = !liked;
-    modalLikes += liked ? 1 : -1;
-    updateLikeButton(liked);
-    updateStatsText();
-    sendGoogleFormLike(currentPost.postId, liked ? 1 : -1);
-  }
-
-  function toggleShare() {
-    if (!currentPost) return;
-    shared = !shared;
-    modalShares += shared ? 1 : -1;
-    updateShareButton(shared);
-    updateStatsText();
-    if (shared) {
-      sendGoogleFormShare(currentPost.postId, 1);
-    }
-  }
-
-  commentInput.addEventListener('input', () => {
-    commentSubmit.disabled = commentInput.value.trim().length === 0;
-  });
-
-  function renderComments() {
-    commentsList.innerHTML = '';
-    if (modalComments.length === 0) {
-      commentsList.innerHTML = '<p style="color:#8e8e8e; font-style: italic;">Aucun commentaire</p>';
-      return;
-    }
-    modalComments.forEach(c => {
-      const d = document.createElement('div');
-      d.className = 'comment';
-      d.innerHTML = `<strong>${escapeHtml(c.user)} :</strong> ${escapeHtml(c.text)}`;
-      commentsList.appendChild(d);
-    });
-  }
-
-  function submitComment(e) {
-    e.preventDefault();
-    if (!currentPost) return;
-    const text = commentInput.value.trim();
-    if (!text) return;
-    modalComments.push({ user: 'Vous', text });
-    renderComments();
-    updateStatsText();
-    sendGoogleFormComment(currentPost.postId, text);
-    commentInput.value = '';
-    commentSubmit.disabled = true;
-  }
-
-  function focusComment() {
-    commentInput.focus();
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, m => {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-    });
-  }
-
-  // Google Forms sending
-  function sendGoogleFormLike(postId, value) {
-    const entry = googleFormEntryIDs[postId]?.like;
-    if (!entry) return;
-    sendToGoogleForm({ [entry]: value });
-  }
-  function sendGoogleFormComment(postId, comment) {
-    const entry = googleFormEntryIDs[postId]?.comment;
-    if (!entry) return;
-    sendToGoogleForm({ [entry]: comment });
-  }
-  function sendGoogleFormShare(postId, value) {
-    // If your form has a share field, send it; else skip
-  }
-  function sendToGoogleForm(data) {
-    const formData = new FormData();
-    for (const key in data) {
-      formData.append(key, data[key]);
-    }
-    fetch(googleFormBaseURL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    }).catch(err => {
-      // silent catch
-    });
-  }
-
-  // Initial render
-  renderPosts();
-</script>
-
+  <!-- Small accessibility + usage note -->
+  <div style="max-width:720px;margin:12px auto;padding:10px;color:#6b6b6b;font-size:13px;text-align:center;">
+    This is a static HTML/CSS mock that imitates an Instagram post interface. To use the exact image: download it and replace the <code>src</code> attribute if the remote URL does not load.
+  </div>
 </body>
 </html>
